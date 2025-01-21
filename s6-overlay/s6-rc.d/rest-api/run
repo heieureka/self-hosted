@@ -1,0 +1,10 @@
+#!/command/with-contenv sh
+set -a
+source /etc/webtor/common.env
+EXPORT_USE_SUBDOMAINS=false
+EXPORT_PATH_PREFIX=/torrent-http-proxy/
+EXPORT_DOMAIN=$DOMAIN
+WEB_PORT=$REST_API_SERVICE_PORT
+GIN_MODE=release
+set +a
+/app/rest-api serve 2>&1 | s6-log p"[rest-api]" 1

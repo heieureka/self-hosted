@@ -1,0 +1,10 @@
+#!/command/with-contenv sh
+set -a
+source /etc/webtor/common.env
+source /etc/webtor/secrets/api.env
+WEBTOR_API_KEY=$API_KEY
+WEBTOR_API_SECRET=$API_SECRET
+WEB_PORT=$WEB_UI_SERVICE_PORT
+GIN_MODE=release
+set +a
+cd /app && ./web-ui serve 2>&1 | s6-log p"[web-ui]" 1
