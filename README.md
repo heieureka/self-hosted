@@ -17,7 +17,7 @@ This is the self-hosted version of [webtor.io](https://webtor.io), implemented a
 1. [Install Docker](https://docs.docker.com/get-docker/).
 2. Start your Webtor instance with the following command:
    ```bash
-   docker run -d -p 8080:8080 -v data:/data --name webtor --restart=always ghcr.io/webtor-io/self-hosted:main
+   docker run -d -p 8080:8080 -v data:/data --name webtor --restart=always ghcr.io/webtor-io/self-hosted:latest
    ```
 3. Access the UI at <http://localhost:8080>.
 4. You're all set!
@@ -27,7 +27,7 @@ This is the self-hosted version of [webtor.io](https://webtor.io), implemented a
 If you plan to access your instance from a different host or domain, set the `DOMAIN` environment variable like this:
 
 ```bash
-docker run -e DOMAIN=https://example.com -d -p 8080:8080 -v data:/data --name webtor --restart=always ghcr.io/webtor-io/self-hosted:main
+docker run -e DOMAIN=https://example.com -d -p 8080:8080 -v data:/data --name webtor --restart=always ghcr.io/webtor-io/self-hosted:latest
 ```
 
 ## Configuring the Autocleaner
