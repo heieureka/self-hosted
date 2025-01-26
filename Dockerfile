@@ -1,5 +1,6 @@
 ARG ALPINE_VER="3.21"
-ARG GOLANG_VER="1.23"
+ARG GOLANG_VER="1.23-alpine3.21"
+ARG NODE_VER="23-alpine3.20"
 ARG S6_OVERLAY_VER="3.2.0.2"
 ARG S6_VERBOSITY=1
 
@@ -10,7 +11,7 @@ ARG TORRENT_WEB_SEEDER_COMMIT="3d3696b2b629992bce08e2139d42894655f47ad8"
 ARG TORRENT_WEB_SEEDER_CLEANER_COMMIT="2ad8ec021c602dd26b7989bb70301c19d5b5ffce"
 ARG CONTENT_TRANSCODER_COMMIT="1c3fd7ece90a6512d30fd6806feb6d23e2acec9f"
 ARG TORRENT_ARCHIVER_COMMIT="6234b47f92e5be5cf21d59d113e7811113e64442"
-ARG SRT2VTT_COMMIT="343f08060a7f5be719e9918e0b58d727856f668e"
+ARG SRT2VTT_COMMIT="v1.0.0"
 ARG TORRENT_HTTP_PROXY_COMMIT="fa0cbd2f587fa39286ec96900ad3f487b8f9a44e"
 ARG REST_API_COMMIT="846cb50a4476d6d124cec133c0abc3924c20f479"
 ARG WEB_UI_COMMIT="79890670b2f58f9866a13ddea9cf625774ead0cc"
@@ -19,6 +20,10 @@ ARG VOD_MODULE_COMMIT="26f06877b0f2a2336e59cda93a3de18d7b23a3e2"
 ARG SECURE_TOKEN_MODULE_COMMIT="24f7b99d9b665e11c92e585d6645ed6f45f7d310"
 
 FROM golang:$GOLANG_VER AS build-app
+
+RUN apk add --no-cache build-base git
+RUN git config --global http.version HTTP/1.1
+
 WORKDIR /app
 RUN mkdir "src" && mkdir "bin"
 
@@ -124,7 +129,7 @@ FROM build-app AS build-srt2vtt
 
 ARG SRT2VTT_COMMIT
 
-ENV CGO_LDFLAGS="-static" GOOS=linux
+ENV GOOS=linux CGO_LDFLAGS="-static" CGO_ENABLED=1
 
 RUN echo $SRT2VTT_COMMIT > /app/bin/srt2vtt.commit && \
     git clone https://github.com/webtor-io/srt2vtt /app/src/srt2vtt && \
@@ -176,7 +181,7 @@ RUN echo $WEB_UI_COMMIT > /app/bin/web-ui.commit && \
     -ldflags '-w -s -X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=ignore' \
     -a -installsuffix cgo -o /app/bin/web-ui
 
-FROM node:22 AS build-web-ui-assets
+FROM node:$NODE_VER AS build-web-ui-assets
 
 WORKDIR /app
 
