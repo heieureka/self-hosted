@@ -14,7 +14,7 @@ ARG TORRENT_ARCHIVER_COMMIT="6234b47f92e5be5cf21d59d113e7811113e64442"
 ARG SRT2VTT_COMMIT="v1.0.0"
 ARG TORRENT_HTTP_PROXY_COMMIT="fa0cbd2f587fa39286ec96900ad3f487b8f9a44e"
 ARG REST_API_COMMIT="846cb50a4476d6d124cec133c0abc3924c20f479"
-ARG WEB_UI_COMMIT="79890670b2f58f9866a13ddea9cf625774ead0cc"
+ARG WEB_UI_COMMIT="v2.0.0"
 ARG NGINX_VERSION="1.26.2"
 ARG VOD_MODULE_COMMIT="26f06877b0f2a2336e59cda93a3de18d7b23a3e2"
 ARG SECURE_TOKEN_MODULE_COMMIT="24f7b99d9b665e11c92e585d6645ed6f45f7d310"
@@ -174,7 +174,7 @@ ARG WEB_UI_COMMIT
 ENV CGO_ENABLED=0 GOOS=linux
 
 RUN echo $WEB_UI_COMMIT > /app/bin/web-ui.commit && \
-    git clone https://github.com/webtor-io/web-ui-v2 /app/src/web-ui && \
+    git clone https://github.com/webtor-io/web-ui /app/src/web-ui && \
     cd /app/src/web-ui && \
     git checkout $WEB_UI_COMMIT && \
     go build \
