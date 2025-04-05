@@ -11,6 +11,7 @@ This is the self-hosted version of [webtor.io](https://webtor.io), implemented a
    - **Audio:** `mp3`, `wav`, `ogg`, `flac`, `m4a`
 - **Download Entire Torrent as a ZIP Archive:** Download your torrent as a ZIP archive on-the-fly while preserving the original directory structure, without requiring a torrent client.
 - **Developer friendly** - with the [SDK](https://github.com/webtor-io/embed-sdk-js) you can provide your users with the ability to watch torrent-videos online on your website.
+- **Multi-architecture support:** Runs on both `amd64` and `arm64/v8` platforms.
 
 ## Quick Setup
 
