@@ -22,6 +22,9 @@ ARG NGINX_VERSION="1.26.2"
 ARG VOD_MODULE_COMMIT="26f06877b0f2a2336e59cda93a3de18d7b23a3e2"
 ARG SECURE_TOKEN_MODULE_COMMIT="24f7b99d9b665e11c92e585d6645ed6f45f7d310"
 
+# 用于指定目标架构的参数
+ARG TARGETARCH
+
 FROM golang:$GOLANG_VER AS build-app
 
 RUN apk add --no-cache build-base git
@@ -33,8 +36,10 @@ RUN mkdir "src" && mkdir "bin"
 FROM build-app AS build-torrent-store
 
 ARG TORRENT_STORE_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $TORRENT_STORE_COMMIT > /app/bin/torrent-store.commit && \
     git clone https://github.com/webtor-io/torrent-store /app/src/torrent-store && \
@@ -47,8 +52,10 @@ RUN echo $TORRENT_STORE_COMMIT > /app/bin/torrent-store.commit && \
 FROM build-app AS build-magnet2torrent
 
 ARG MAGNET2TORRENT_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $MAGNET2TORRENT_COMMIT > /app/bin/magnet2torrent.commit && \
     git clone https://github.com/webtor-io/magnet2torrent /app/src/magnet2torrent && \
@@ -61,8 +68,10 @@ RUN echo $MAGNET2TORRENT_COMMIT > /app/bin/magnet2torrent.commit && \
 FROM build-app AS build-external-proxy
 
 ARG EXTERNAL_PROXY_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $EXTERNAL_PROXY_COMMIT > /app/bin/external-proxy.commit && \
     git clone https://github.com/webtor-io/external-proxy /app/src/external-proxy && \
@@ -75,8 +84,10 @@ RUN echo $EXTERNAL_PROXY_COMMIT > /app/bin/external-proxy.commit && \
 FROM build-app AS build-torrent-web-seeder
 
 ARG TORRENT_WEB_SEEDER_COMMIT
+ARG TARGETARCH
 
 ENV CGO_LDFLAGS="-static" GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $TORRENT_WEB_SEEDER_COMMIT > /app/bin/torrent-web-seeder.commit && \
     git clone https://github.com/webtor-io/torrent-web-seeder /app/src/torrent-web-seeder && \
@@ -89,8 +100,10 @@ RUN echo $TORRENT_WEB_SEEDER_COMMIT > /app/bin/torrent-web-seeder.commit && \
 FROM build-app AS build-torrent-web-seeder-cleaner
 
 ARG TORRENT_WEB_SEEDER_CLEANER_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $TORRENT_WEB_SEEDER_CLEANER_COMMIT > /app/bin/torrent-web-seeder-cleaner.commit && \
     git clone https://github.com/webtor-io/torrent-web-seeder-cleaner /app/src/torrent-web-seeder-cleaner && \
@@ -103,8 +116,10 @@ RUN echo $TORRENT_WEB_SEEDER_CLEANER_COMMIT > /app/bin/torrent-web-seeder-cleane
 FROM build-app AS build-content-transcoder
 
 ARG CONTENT_TRANSCODER_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $CONTENT_TRANSCODER_COMMIT > /app/bin/content-transcoder.commit && \
     git clone https://github.com/webtor-io/content-transcoder /app/src/content-transcoder && \
@@ -117,8 +132,10 @@ RUN echo $CONTENT_TRANSCODER_COMMIT > /app/bin/content-transcoder.commit && \
 FROM build-app AS build-torrent-archiver
 
 ARG TORRENT_ARCHIVER_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $TORRENT_ARCHIVER_COMMIT > /app/bin/torrent-archiver.commit && \
     git clone https://github.com/webtor-io/torrent-archiver /app/src/torrent-archiver && \
@@ -131,8 +148,10 @@ RUN echo $TORRENT_ARCHIVER_COMMIT > /app/bin/torrent-archiver.commit && \
 FROM build-app AS build-srt2vtt
 
 ARG SRT2VTT_COMMIT
+ARG TARGETARCH
 
 ENV GOOS=linux CGO_LDFLAGS="-static" CGO_ENABLED=1
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $SRT2VTT_COMMIT > /app/bin/srt2vtt.commit && \
     git clone https://github.com/webtor-io/srt2vtt /app/src/srt2vtt && \
@@ -145,8 +164,10 @@ RUN echo $SRT2VTT_COMMIT > /app/bin/srt2vtt.commit && \
 FROM build-app AS build-torrent-http-proxy
 
 ARG TORRENT_HTTP_PROXY_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $TORRENT_HTTP_PROXY_COMMIT > /app/bin/torrent-http-proxy.commit && \
     git clone https://github.com/webtor-io/torrent-http-proxy /app/src/torrent-http-proxy && \
@@ -159,8 +180,10 @@ RUN echo $TORRENT_HTTP_PROXY_COMMIT > /app/bin/torrent-http-proxy.commit && \
 FROM build-app AS build-rest-api
 
 ARG REST_API_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $REST_API_COMMIT > /app/bin/rest-api.commit && \
     git clone https://github.com/webtor-io/rest-api /app/src/rest-api && \
@@ -173,8 +196,10 @@ RUN echo $REST_API_COMMIT > /app/bin/rest-api.commit && \
 FROM build-app AS build-web-ui
 
 ARG WEB_UI_COMMIT
+ARG TARGETARCH
 
 ENV CGO_ENABLED=0 GOOS=linux
+ENV GOARCH=${TARGETARCH:-amd64}
 
 RUN echo $WEB_UI_COMMIT > /app/bin/web-ui.commit && \
     git clone https://github.com/webtor-io/web-ui /app/src/web-ui && \
@@ -224,11 +249,24 @@ FROM alpine:$ALPINE_VER AS base
 ARG S6_OVERLAY_VER
 ARG S6_VERBOSITY
 ENV S6_VERBOSITY=$S6_VERBOSITY
+ARG TARGETARCH
 
+# 添加通用的noarch文件
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VER}/s6-overlay-noarch.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
-ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VER}/s6-overlay-x86_64.tar.xz /tmp
-RUN tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && rm -f /tmp/s6-overlay-noarch.tar.xz
+
+# 基于架构添加相应的二进制文件
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VER}/s6-overlay-x86_64.tar.xz /tmp/s6-overlay-arch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VER}/s6-overlay-aarch64.tar.xz /tmp/s6-overlay-aarch64.tar.xz
+
+# 条件解压架构相关文件
+RUN if [ "$(uname -m)" = "x86_64" ] || [ "$TARGETARCH" = "amd64" ]; then \
+        tar -C / -Jxpf /tmp/s6-overlay-arch.tar.xz; \
+    elif [ "$(uname -m)" = "aarch64" ] || [ "$TARGETARCH" = "arm64" ]; then \
+        tar -C / -Jxpf /tmp/s6-overlay-aarch64.tar.xz; \
+    fi && \
+    rm -f /tmp/s6-overlay-*.tar.xz
+
 RUN apk --no-cache add redis ffmpeg ca-certificates openssl pcre zlib envsubst uuidgen
 
 WORKDIR /app
